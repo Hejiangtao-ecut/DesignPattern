@@ -1,4 +1,4 @@
-# designMode
-learn design mode
+# Design Pattern
+learn design pattern
 
 学习设计模式
