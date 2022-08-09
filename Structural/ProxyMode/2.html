@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟代理</title>
+</head>
+<body>
+    <div>
+        图片预加载就是虚拟代理最好的例子
+    </div>
+    <img id="img" src="">
+</body>
+<script>
+// 单一职责
+// 这个类只负责dom操作
+class PreLoadImg{
+    constructor(imgNode){
+        // 初始化获取真实dom节点
+        this.imgNode = imgNode;
+    }
+
+    // 修改img节点的src
+    setSrc(imgUrl){
+        this.imgNode.src = imgUrl
+    }
+}
+
+// 虚拟代理
+// 这个类负责图片加载
+class ProxyImg{
+    // 占位图的img imgUrl
+    static LOAD_URL = 'https://img2.baidu.com/it/u=125933802,4087839422&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500';
+
+    // 获取真实实例
+    constructor(targetImage){
+        // targetImage 即PreLoadImage实例
+        this.targetImage = targetImage;
+    }
+
+    // 操作虚拟img，完成加载
+    setSrc(targetUrl){
+        // 真实img节点初始化时展示的是一个占位图
+        this.targetImage.setSrc(ProxyImg.LOAD_URL);
+
+        // 创建一个帮我们加载图片的虚拟Image实例
+        const virtualImage = new Image();
+        
+        // 监听目标图片加载情况，加载完毕进行图片替换
+        virtualImage.onload = ()=>{
+            console.log('图片加载完毕----');
+            // 加个延时切换，预览展位生效
+            setTimeout(()=>{
+                this.targetImage.setSrc(targetUrl);
+            },1000)
+        }
+
+        virtualImage.src = targetUrl;
+    }
+}
+
+const img = document.getElementById('img');
+
+const preLoadImg = new PreLoadImg(img);
+
+const proxyImg = new ProxyImg(preLoadImg);
+proxyImg.setSrc('https://img1.baidu.com/it/u=3217543765,3223180824&fm=253&app=120&size=w931&n=0&f=JPEG&fmt=auto?sec=1660064400&t=bfb64c69f28057958fab18ebe3fab230');
+</script>
+</html>

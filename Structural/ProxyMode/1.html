@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件代理</title>
+</head>
+<body>
+    <div id="father">
+        <a href="#">链接1号</a>
+        <a href="#">链接2号</a>
+        <a href="#">链接3号</a>
+        <a href="#">链接4号</a>
+        <a href="#">链接5号</a>
+        <a href="#">链接6号</a>
+        <div>ssss</div>
+    </div>
+</body>
+
+<script>
+// 假如不用代理模式，那么我们要一个一个循环监听安装事件函数
+// 这种方法繁琐且消耗巨大
+// const aNodes = document.getElementById('father').getElementsByTagName('a');
+// const length = aNodes.length;
+// for (let i = 0; i < length; i++) {
+//     aNodes[i].addEventListener('click', e=>{
+//         e.preventDefault();
+//         alert(`我是${aNodes[i].innerText}`);
+//     })
+// }
+
+
+// 事件具有冒泡的特性
+// 当我们点击 a 元素时，点击事件会“冒泡”到父元素 div 上，从而被监听到
+// 那么我们统一把事件放到父元素来解决就好了，而不需要在子元素上多次绑定
+const father = document.getElementById('father');
+father.addEventListener('click', e=>{
+    // console.log(e.target.tagName);
+    if(e.target.tagName === 'A'){
+        e.preventDefault();
+        alert(`我是${e.target.innerText}`);
+    }
+})
+
+</script>
+</html>
